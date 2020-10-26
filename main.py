@@ -33,6 +33,25 @@ class Product:
                                                 SALES PURCHASE MANAGEMENT SYSTEM",
                                                 "Really ... Do you want to \
                                                 close the system")
+            if close > 0:
+                root.destroy()
+                print("Product : close method finished\n")
+                return
+
+
+        def clear():
+            print("Product : clear method called")
+            self.txtpID.delete(0,END)
+            self.txtpName.delete(0,END)
+            self.txtpPrice.delete(0,END)
+            self.txtpQty.delete(0,END)
+            self.txtpCompany.delete(0,END)
+            self.txtpContact.delete(0,END)
+            print("Product : clear method finished\n ")
+
+
+
+
 
 
 
@@ -152,7 +171,7 @@ class Product:
         self.buttonShow.grid(row=0, column=1)
 
         self.buttonClear = Button(OperationFrame, text='Reset',
-                                 font=('arial', 20, 'bold'), height=2, width='12', bd=4)
+                                 font=('arial', 20, 'bold'), height=2, width='12', bd=4, command=clear)
         self.buttonClear.grid(row=0, column=2)
 
         self.buttonDelete = Button(OperationFrame, text='Delete',
@@ -168,7 +187,7 @@ class Product:
         self.buttonUpdate.grid(row=0, column=5)
 
         self.buttonClose = Button(OperationFrame, text='Close',
-                                   font=('arial', 20, 'bold'), height=2, width='12', bd=4)
+                                   font=('arial', 20, 'bold'), height=2, width='12', bd=4, command=close)
         self.buttonClose.grid(row=0, column=6)
 
 
