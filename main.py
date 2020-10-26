@@ -182,7 +182,7 @@ class Database:
         con = sqlite3.connect("inventory.db")
         cur = con.cursor()
         query = "create table if not exists product (pid integer primary key, \
-                 pname text, price text, qty text, company text contact)"
+                 pname text, price text, qty text, company text, contact text)"
         cur.execute(query)
         con.commit()
         con.close()
@@ -238,12 +238,6 @@ class Database:
         con.commit()
         con.close()
         print(pid,"Database : update method finished \n")
-
-
-
-
-
-
 
 
 
