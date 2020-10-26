@@ -9,6 +9,10 @@ class Product:
 
     def __init__(self,root):
 
+        # create object reference instance of Database class as p
+        p = Database()
+        p.conn()
+
         self.root = root
         self.root.title("WAREHOUSE INVENTORY SALES PURCHASE MANAGEMENT SYSTEM")
         self.root.geometry("1325x690")
@@ -20,6 +24,16 @@ class Product:
         pQty=StringVar()
         pCompany=StringVar()
         pContact=StringVar()
+
+        ''' Let's call the Database methods to perform database operations '''
+
+        def close():
+            print("Product : close method called ")
+            close = tkinter.messagebox.askyesno("WAREHOUSE INVENTORY \
+                                                SALES PURCHASE MANAGEMENT SYSTEM",
+                                                "Really ... Do you want to \
+                                                close the system")
+
 
 
 
@@ -156,6 +170,75 @@ class Product:
         self.buttonClose = Button(OperationFrame, text='Close',
                                    font=('arial', 20, 'bold'), height=2, width='12', bd=4)
         self.buttonClose.grid(row=0, column=6)
+
+
+
+
+# Back End Database operation
+
+class Database:
+    def conn(self):
+        print("Database : connection method called")
+        con = sqlite3.connect("inventory.db")
+        cur = con.cursor()
+        query = "create table if not exists product (pid integer primary key, \
+                 pname text, price text, qty text, company text contact)"
+        cur.execute(query)
+        con.commit()
+        con.close()
+        print("Database : connection method finished\n")
+
+    def insert(self, pid, name, price, qty, company, contact):
+        print("Database : insert method called")
+        con = sqlite3.connect("inventory.db")
+        cur = con.cursor()
+        query="insert into product value(?,?,?,?,?,?)"
+        cur.execute(query, (pid,name,price,qty,company,contact))
+        con.commit()
+        con.close()
+        print("Database : insert method finished\n")
+
+    def show(self):
+        print("Database : show method called")
+        con = sqlite3.connect("inventory.db")
+        cur = con.cursor()
+        query="select * from product"
+        cur.execute(query)
+        rows=cur.fetchall()
+        con.close()
+        print("Database : show method finished\n")
+        return rows
+
+    def delete(self,pid):
+        print("Database : delete method called ", pid)
+        con = sqlite3.connect("inventory.db")
+        cur = con.cursor()
+        cur.execute("delete rom product where pid=?", (pid,))
+        con.commit()
+        con.close()
+        print(pid, "Database : delete method finished\n")
+
+    def search(self, pid="", name="",price="",qty="",company="",contact=""):
+        print("Database: search method called ", pid)
+        con = sqlite3.connect("inventory.db")
+        cur = con.cursor()
+        cur.execute("select * from product where pid=? or pname=? or \ price=? or qty=? or company=? or contact=?")
+        row=cur.fetchall()
+        con.close()
+        print("Database : search method finished \n")
+        return row
+
+    def update(self, pid="", name="",price="",qty="",company="",contact=""):
+        print("Database: search method called ", pid)
+        con = sqlite3.connect("inventory.db")
+        cur = con.cursor()
+        cur.execute("update product set pid=? or pname=? or \ "
+                    "price=? or qty=? or company=? or contact=? where pid=?",
+                    (pid,name,price,qty,company,contact,pid))
+        con.commit()
+        con.close()
+        print(pid,"Database : update method finished \n")
+
 
 
 
