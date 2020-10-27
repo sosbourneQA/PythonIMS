@@ -27,6 +27,7 @@ class Product:
 
         ''' Let's call the Database methods to perform database operations '''
 
+        # function to close the frame
         def close():
             print("Product : close method called ")
             close = tkinter.messagebox.askyesno("WAREHOUSE INVENTORY \
@@ -38,7 +39,7 @@ class Product:
                 print("Product : close method finished\n")
                 return
 
-
+        # function to clear / reset the widgets
         def clear():
             print("Product : clear method called")
             self.txtpID.delete(0,END)
@@ -47,7 +48,23 @@ class Product:
             self.txtpQty.delete(0,END)
             self.txtpCompany.delete(0,END)
             self.txtpContact.delete(0,END)
-            print("Product : clear method finished\n ")
+
+
+
+        # function to save the product details in database tables
+        def insert():
+            print("Product : insert  method called ")
+            if (len(pId.get())!=0):
+                p.insert(pId.get(),pName.get(),pPrice.get(),pQty.get(),pCompany.get(),pContact.get())
+                productList.delete(0,END)
+                productList.insert(END,pId.get(),pName.get(),pPrice.get(),pQty.get(),pCompany.get(),pContact.get())
+            else:
+                tkinter.messagebox.askyesno("WAREHOUSE INVENTORY \
+            SALES PURACHSE MANAGEMENT SYSTEM", "Really ... enter Product id ")
+
+            print("Product : insert method finished\n")
+
+            print("Product : insert method finished\n")
 
 
 
@@ -57,7 +74,8 @@ class Product:
 
 
 
-        ''' Create the frame '''
+
+            ''' Create the frame '''
         MainFrame = Frame(self.root,bg="red")
         MainFrame.grid()
 
@@ -163,7 +181,7 @@ class Product:
         ''' Add Buttons to Operation Frame '''
 
         self.buttonSave = Button(OperationFrame, text='Save',
-                        font=('arial',20,'bold'), height=2, width='12',bd=4)
+                        font=('arial',20,'bold'), height=2, width='12',bd=4, command=insert)
         self.buttonSave.grid(row=0, column=0)
 
         self.buttonShow = Button(OperationFrame, text='Show Data',
@@ -211,8 +229,8 @@ class Database:
         print("Database : insert method called")
         con = sqlite3.connect("inventory.db")
         cur = con.cursor()
-        query="insert into product value(?,?,?,?,?,?)"
-        cur.execute(query, (pid,name,price,qty,company,contact))
+        query = "insert into product values(?,?,?,?,?,?)"
+        cur.execute(query, (pid, name, price, qty, company, contact))
         con.commit()
         con.close()
         print("Database : insert method finished\n")
