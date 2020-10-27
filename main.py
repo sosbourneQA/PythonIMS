@@ -25,6 +25,9 @@ class Product:
         pCompany=StringVar()
         pContact=StringVar()
 
+
+
+
         ''' Let's call the Database methods to perform database operations '''
 
         # function to close the frame
@@ -58,13 +61,73 @@ class Product:
                 p.insert(pId.get(),pName.get(),pPrice.get(),pQty.get(),pCompany.get(),pContact.get())
                 productList.delete(0,END)
                 productList.insert(END,pId.get(),pName.get(),pPrice.get(),pQty.get(),pCompany.get(),pContact.get())
+
+                showInProductList()   #called showInProductList method
+                # after inserting the data record into the database table
+
             else:
                 tkinter.messagebox.askyesno("WAREHOUSE INVENTORY \
             SALES PURACHSE MANAGEMENT SYSTEM", "Really ... enter Product id ")
 
             print("Product : insert method finished\n")
 
-            print("Product : insert method finished\n")
+        # function responsible to show product data scroll product list
+        def showInProductList():
+            print("Product : showInProductList method called")
+            productList.delete(0,END)
+            for row in p.show():
+                productList.insert(END, row, str(""))
+            print("Product : showInProductList method finished\n")
+
+
+        # add to scroll bar
+        def productRecord(event):   # function to be called from scrollbar productList
+            print("Product : productRec method called ")
+            global pd
+
+            searchPd = productList.curselection()[0]
+            pd = productList.get(searchPd)
+
+            self.txtpID.delete(0,END)
+            self.txtpID.insert(END,pd[0])
+
+            self.txtpName.delete(0,END)
+            self.txtpName.insert(END, pd[1])
+
+            self.txtpPrice.delete(0,END)
+            self.txtpPrice.insert(END, pd[2])
+
+            self.txtpQty.delete(0, END)
+            self.txtpQty.insert(END, pd[3])
+
+            self.txtpCompany.delete(0,END)
+            self.txtpCompany.insert(END, pd[4])
+
+            self.txtpContact.delete(0,END)
+            self.txtpContact.insert(END, pd[5])
+
+            print('Product : productRec method finished \n')
+
+        # function to delete he data record from the database
+
+        def delete():
+            print('Product : delete method called \n')
+            if (len(pId.get()) != 0):
+                p.delete(pd[0])
+                clear()
+                showInProductList()
+            print('Product : delete method finished \n')
+
+
+# '''
+#                 p.insert(pId.get(), pName.get(), pPrice.get(), pQty.get(), pCompany.get(), pContact.get())
+#                 productList.delete(0, END)
+#                 productList.insert(END, pId.get(), pName.get(), pPrice.get(), pQty.get(), pCompany.get(),
+#                                    pContact.get())
+#
+#                 showInProductList()  # called showInProductList method
+#
+# '''
 
 
 
@@ -75,7 +138,14 @@ class Product:
 
 
 
-            ''' Create the frame '''
+
+
+
+
+
+
+        ''' Create Main Frame '''
+
         MainFrame = Frame(self.root,bg="red")
         MainFrame.grid()
 
@@ -173,19 +243,22 @@ class Product:
         productList=Listbox(RightBodyFrame, width=40, height=16, font=('arial',12,'bold'),
                 yscrollcommand=scroll.set)
 
+        # called above created productRec function of init
+        productList.bind('<<ListboxSelect>>', productRecord)
+
         productList.grid(row=0, column=0, padx=8)
         scroll.config(command=productList.yview)
 
 
 
-        ''' Add Buttons to Operation Frame '''
+        ''' Add BUTTONS to Operation Frame '''
 
         self.buttonSave = Button(OperationFrame, text='Save',
                         font=('arial',20,'bold'), height=2, width='12',bd=4, command=insert)
         self.buttonSave.grid(row=0, column=0)
 
         self.buttonShow = Button(OperationFrame, text='Show Data',
-                                 font=('arial', 20, 'bold'), height=2, width='12', bd=4)
+                                 font=('arial', 20, 'bold'), height=2, width='12', bd=4, command=showInProductList)
         self.buttonShow.grid(row=0, column=1)
 
         self.buttonClear = Button(OperationFrame, text='Reset',
@@ -193,7 +266,7 @@ class Product:
         self.buttonClear.grid(row=0, column=2)
 
         self.buttonDelete = Button(OperationFrame, text='Delete',
-                                 font=('arial', 20, 'bold'), height=2, width='12', bd=4)
+                                 font=('arial', 20, 'bold'), height=2, width='12', bd=4, command=delete)
         self.buttonDelete.grid(row=0, column=3)
 
         self.buttonSearch = Button(OperationFrame, text='Search',
