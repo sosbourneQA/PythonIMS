@@ -109,7 +109,6 @@ class Product:
             print('Product : productRec method finished \n')
 
         # function to delete he data record from the database
-
         def delete():
             print('Product : delete method called \n')
             if (len(pId.get()) != 0):
@@ -117,6 +116,36 @@ class Product:
                 clear()
                 showInProductList()
             print('Product : delete method finished \n')
+
+
+        def search():
+            print('Product : search method called')
+            productList.delete(0,END)
+            for row in p.search(pId.get(), pName.get(), pPrice.get(), pQty.get(), pCompany.get(), pContact.get()):
+                productList.insert(END,row,str(""))
+
+            print('Product : search method finished \n')
+
+        def update():
+            print("Product : update method called")
+            if (len(pId.get())!=0):
+                print("pd[0]", pd[p])
+                p.delete(pd[0])
+            if (len(pId.get()) != 0):
+                p.insert(pId.get(), pName.get(), pPrice.get(), pQty.get(), pCompany.get(), pContact.get())
+                productList.delete(0,END)
+            productList.insert(END, (pId.get(), pName.get(), pPrice.get(), pQty.get(), pCompany.get(), pContact.get()))
+
+            print("Product : update method finished")
+
+
+
+
+
+
+
+
+
 
 
 # '''
@@ -270,11 +299,11 @@ class Product:
         self.buttonDelete.grid(row=0, column=3)
 
         self.buttonSearch = Button(OperationFrame, text='Search',
-                                   font=('arial', 20, 'bold'), height=2, width='12', bd=4)
+                                   font=('arial', 20, 'bold'), height=2, width='12', bd=4, command=search)
         self.buttonSearch.grid(row=0, column=4)
 
         self.buttonUpdate = Button(OperationFrame, text='Update',
-                                   font=('arial', 20, 'bold'), height=2, width='12', bd=4)
+                                   font=('arial', 20, 'bold'), height=2, width='12', bd=4, command=update)
         self.buttonUpdate.grid(row=0, column=5)
 
         self.buttonClose = Button(OperationFrame, text='Close',
@@ -323,7 +352,7 @@ class Database:
         print("Database : delete method called ", pid)
         con = sqlite3.connect("inventory.db")
         cur = con.cursor()
-        cur.execute("delete rom product where pid=?", (pid,))
+        cur.execute("delete from product where pid=?", (pid,))
         con.commit()
         con.close()
         print(pid, "Database : delete method finished\n")
@@ -332,7 +361,8 @@ class Database:
         print("Database: search method called ", pid)
         con = sqlite3.connect("inventory.db")
         cur = con.cursor()
-        cur.execute("select * from product where pid=? or pname=? or \ price=? or qty=? or company=? or contact=?")
+        cur.execute("select * from product where pid=? or pname=? or price=? or qty=? or company=? or contact=?",
+                    (pid,name,price,qty,company,contact))
         row=cur.fetchall()
         con.close()
         print("Database : search method finished \n")
@@ -342,12 +372,14 @@ class Database:
         print("Database: search method called ", pid)
         con = sqlite3.connect("inventory.db")
         cur = con.cursor()
-        cur.execute("update product set pid=? or pname=? or \ "
-                    "price=? or qty=? or company=? or contact=? where pid=?",
+        cur.execute("update product set pid=? or pname=? or \
+                  price=? or qty=? or company=? or contact=? where pid=?",
                     (pid,name,price,qty,company,contact,pid))
         con.commit()
         con.close()
         print(pid,"Database : update method finished \n")
+
+
 
 
 
